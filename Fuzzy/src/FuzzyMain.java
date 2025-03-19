@@ -126,7 +126,7 @@ public class FuzzyMain {
 		System.out.println("\nTop 10 Movies with Best Score:");
 		for (int i = 0; i < Math.min(10, movieScores.size()); i++) {
 			System.out.println(
-					(i + 1) + ". " + movieScores.get(i).getTitle() + " - Score: " + movieScores.get(i).getScore());
+					(i + 1) + ". " + movieScores.get(i).getTitle() + " - Score: " + Math.round(movieScores.get(i).getScore() * 100.0) / 100.0);
 		}
 	}
 
