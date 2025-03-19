@@ -73,22 +73,30 @@ public class FuzzyMain {
 				float genreValue = computeGenreScore(data[2]); // Process genres correctly
 				genreMatchGroup.fuzzify(genreValue, fuzzyVariables);
 
-				// Apply AND rules
 				applyAndRule(fuzzyVariables, "High Vote Average", "High Popularity", "Very Interesting");
 				applyAndRule(fuzzyVariables, "Medium Vote Average", "High Popularity", "Very Interesting");
-				applyAndRule(fuzzyVariables, "High Vote Average", "Medium Popularity", "Average Interesting");
 				applyAndRule(fuzzyVariables, "Low Vote Average", "High Popularity", "Average Interesting");
+
+				applyAndRule(fuzzyVariables, "High Vote Average", "Medium Popularity", "Very Interesting");
 				applyAndRule(fuzzyVariables, "Medium Vote Average", "Medium Popularity", "Average Interesting");
+				applyAndRule(fuzzyVariables, "Low Vote Average", "Medium Popularity", "Low Interesting");
+
+				applyAndRule(fuzzyVariables, "High Vote Average", "Low Popularity", "Average Interesting");
+				applyAndRule(fuzzyVariables, "Medium Vote Average", "Low Popularity", "Low Interesting");
 				applyAndRule(fuzzyVariables, "Low Vote Average", "Low Popularity", "Low Interesting");
 
-				applyAndRule(fuzzyVariables, "High Genre Match", "High Vote Average", "Very Interesting");
-				applyAndRule(fuzzyVariables, "Medium Genre Match", "Medium Popularity", "Average Interesting");
-				applyAndRule(fuzzyVariables, "Low Genre Match", "Low Popularity", "Low Interesting");
 
-				// Apply OR rules
-				applyOrRule(fuzzyVariables, "High Vote Average", "High Popularity", "Very Interesting");
-				applyOrRule(fuzzyVariables, "Medium Vote Average", "Medium Popularity", "Average Interesting");
-				applyOrRule(fuzzyVariables, "Low Vote Average", "Low Popularity", "Low Interesting");
+				applyAndRule(fuzzyVariables, "High Genre Match", "Very Interesting", "Very Interesting");
+				applyAndRule(fuzzyVariables, "Medium Genre Match", "Very Interesting", "Average Interesting");
+				applyAndRule(fuzzyVariables, "Low Genre Match", "Very Interesting", "Average Interesting");
+
+				applyAndRule(fuzzyVariables, "High Genre Match", "Average Interesting", "Very Interesting");
+				applyAndRule(fuzzyVariables, "Medium Genre Match", "Average Interesting", "Average Interesting");
+				applyAndRule(fuzzyVariables, "Low Genre Match", "Average Interesting", "Low Interesting");
+
+				applyAndRule(fuzzyVariables, "High Genre Match", "Low Interesting", "Average Interesting");
+				applyAndRule(fuzzyVariables, "Medium Genre Match", "Low Interesting", "Low Interesting");
+				applyAndRule(fuzzyVariables, "Low Genre Match", "Low Interesting", "Low Interesting");
 
 				float lowInteresting = fuzzyVariables.getOrDefault("Low Interesting", 0.0f);
 				float averageInteresting = fuzzyVariables.getOrDefault("Average Interesting", 0.0f);
