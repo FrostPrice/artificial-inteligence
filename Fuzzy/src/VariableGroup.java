@@ -1,8 +1,9 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class VariableGroup {
-	private ArrayList<FuzzyVariable> variableList;
+	private List<FuzzyVariable> variableList;
 
 	public VariableGroup() {
 		variableList = new ArrayList<>();
