@@ -12,13 +12,13 @@ This project uses fuzzy logic to score movies based on various attributes such a
 
 Top 10 Movies with Best Score:
 
-1. Interstellar - Score: 8.25
-2. Guardians of the Galaxy - Score: 8.047424
-3. Deadpool - Score: 7.714286
-4. Minions - Score: 7.685653
-5. Mad Max: Fury Road - Score: 6.663608
-6. Whiplash - Score: 6.136136
-7. The Dark Knight - Score: 6.100345
-8. Jurassic World - Score: 6.071035
-9. Inception - Score: 5.9646378
-10. Big Hero 6 - Score: 5.847973
+1. Guardians of the Galaxy - Score: 8.9
+2. Interstellar - Score: 8.5
+3. Inception - Score: 8.25
+4. The Empire Strikes Back - Score: 8.25
+5. Star Wars - Score: 8.25
+6. Star Wars: Clone Wars (Volume 1) - Score: 8.25
+7. Deadpool - Score: 8.0
+8. Return of the Jedi - Score: 7.89
+9. The Lord of the Rings: The Fellowship of the Ring - Score: 7.67
+10. The Lord of the Rings: The Return of the King - Score: 7.65
