@@ -23,10 +23,9 @@ public class FuzzyVariable {
 		if (value > b1 && value < t1) {
 			return (value - b1) / (t1 - b1);
 		}
-		if (value > t2 && value < b2) {
-			return 1.0f - ((value - t2) / (b2 - t2));
-		}
-		return 0;
+
+    // value > t2 && value < b2
+		return 1.0f - (value - t2) / (b2 - t2);
 	}
 
 	public String getName() {
