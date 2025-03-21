@@ -24,7 +24,7 @@ public class FuzzyVariable {
 			return (value - b1) / (t1 - b1);
 		}
 
-    // value > t2 && value < b2
+		// value > t2 && value < b2
 		return 1.0f - (value - t2) / (b2 - t2);
 	}
 
