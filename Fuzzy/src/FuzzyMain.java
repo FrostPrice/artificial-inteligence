@@ -14,9 +14,22 @@ public class FuzzyMain {
 		FuzzyVariable mediumPopularity = new FuzzyVariable("Medium Popularity", 100, 500, 800, 1000);
 		FuzzyVariable highPopularity = new FuzzyVariable("High Popularity", 800, 1000, 2000, 2000);
 
-		FuzzyVariable lowGenreMatch = new FuzzyVariable("Low Genre Match", 0, 0, 0.2f, 0.4f);
+		FuzzyVariable lowGenreMatch = new FuzzyVariable("Low Genre Match", -999, 0, 0.2f, 0.4f);
 		FuzzyVariable mediumGenreMatch = new FuzzyVariable("Medium Genre Match", 0.2f, 0.4f, 0.6f, 0.8f);
 		FuzzyVariable highGenreMatch = new FuzzyVariable("High Genre Match", 0.6f, 0.8f, 1.0f, 1.0f);
+
+		FuzzyVariable lowRevenue = new FuzzyVariable("Low Revenue", 0, 0, 20000000, 50000000);
+		FuzzyVariable mediumRevenue = new FuzzyVariable("Medium Revenue", 20000000, 50000000, 93000000, 150000000);
+		FuzzyVariable highRevenue = new FuzzyVariable("High Revenue", 93000000,
+				150000000, 1000000000, 3000000000L); // The L defines long number
+
+		FuzzyVariable lowVoteCount = new FuzzyVariable("Low Vote Count", 0, 0, 500, 2000);
+		FuzzyVariable mediumVoteCount = new FuzzyVariable("Medium Vote Count", 500, 2000, 5000, 10000);
+		FuzzyVariable highVoteCount = new FuzzyVariable("High Vote Count", 5000, 10000, 20000, 30000);
+
+		FuzzyVariable shortRuntime = new FuzzyVariable("Short Runtime", 0, 0, 80, 95);
+		FuzzyVariable mediumRuntime = new FuzzyVariable("Medium Runtime", 80, 95, 110, 120);
+		FuzzyVariable longRuntime = new FuzzyVariable("Long Runtime", 110, 120, 20, 340);
 
 		VariableGroup voteAverageGroup = new VariableGroup();
 		voteAverageGroup.add(lowVoteAverage);
@@ -32,6 +45,21 @@ public class FuzzyMain {
 		genreMatchGroup.add(lowGenreMatch);
 		genreMatchGroup.add(mediumGenreMatch);
 		genreMatchGroup.add(highGenreMatch);
+
+		VariableGroup revenueGroup = new VariableGroup();
+		revenueGroup.add(lowRevenue);
+		revenueGroup.add(mediumRevenue);
+		revenueGroup.add(highRevenue);
+
+		VariableGroup voteCountGroup = new VariableGroup();
+		voteCountGroup.add(lowVoteCount);
+		voteCountGroup.add(mediumVoteCount);
+		voteCountGroup.add(highVoteCount);
+
+		VariableGroup runtimeGroup = new VariableGroup();
+		runtimeGroup.add(shortRuntime);
+		runtimeGroup.add(mediumRuntime);
+		runtimeGroup.add(longRuntime);
 
 		VariableGroup interestGroup = new VariableGroup();
 		interestGroup.add(new FuzzyVariable("Low Interesting", 0, 0, 3, 6));
@@ -60,12 +88,24 @@ public class FuzzyMain {
 
 				float voteAverageValue;
 				float popularityValue;
+				float revenueValue;
+				float voteCountValue;
+				float runtimeValue;
 				try {
-					voteAverageValue = Float.parseFloat(data[19]); // Correct column
+					voteAverageValue = Float.parseFloat(data[19]);
 					voteAverageGroup.fuzzify(voteAverageValue, fuzzyVariables);
 
-					popularityValue = Float.parseFloat(data[9]); // Correct column
+					popularityValue = Float.parseFloat(data[9]);
 					popularityGroup.fuzzify(popularityValue, fuzzyVariables);
+
+					revenueValue = Float.parseFloat(data[13]);
+					revenueGroup.fuzzify(revenueValue, fuzzyVariables);
+
+					voteCountValue = Float.parseFloat(data[20]);
+					voteCountGroup.fuzzify(voteCountValue, fuzzyVariables);
+
+					runtimeValue = Float.parseFloat(data[14]);
+					runtimeGroup.fuzzify(runtimeValue, fuzzyVariables);
 				} catch (NumberFormatException e) {
 					continue; // Skip rows with invalid numerical data
 				}
@@ -73,30 +113,58 @@ public class FuzzyMain {
 				float genreValue = computeGenreScore(data[2]); // Process genres correctly
 				genreMatchGroup.fuzzify(genreValue, fuzzyVariables);
 
-				applyAndRule(fuzzyVariables, "High Vote Average", "High Popularity", "Very Interesting");
-				applyAndRule(fuzzyVariables, "Medium Vote Average", "High Popularity", "Very Interesting");
-				applyAndRule(fuzzyVariables, "Low Vote Average", "High Popularity", "Average Interesting");
+				// * AND Rules
+				// Vote Average and Vote Count = Popularity
+				applyAndRule(fuzzyVariables, "High Vote Average", "High Vote Count", "High Popularity");
+				applyAndRule(fuzzyVariables, "Medium Vote Average", "High Vote Count", "Medium Popularity");
+				applyAndRule(fuzzyVariables, "Low Vote Average", "High Vote Count", "Medium Popularity");
 
-				applyAndRule(fuzzyVariables, "High Vote Average", "Medium Popularity", "Very Interesting");
-				applyAndRule(fuzzyVariables, "Medium Vote Average", "Medium Popularity", "Average Interesting");
-				applyAndRule(fuzzyVariables, "Low Vote Average", "Medium Popularity", "Low Interesting");
+				applyAndRule(fuzzyVariables, "High Vote Average", "Medium Vote Count", "High Popularity");
+				applyAndRule(fuzzyVariables, "Medium Vote Average", "Medium Vote Count", "Medium Popularity");
+				applyAndRule(fuzzyVariables, "Low Vote Average", "Medium Vote Count", "Medium Popularity");
 
-				applyAndRule(fuzzyVariables, "High Vote Average", "Low Popularity", "Average Interesting");
-				applyAndRule(fuzzyVariables, "Medium Vote Average", "Low Popularity", "Low Interesting");
-				applyAndRule(fuzzyVariables, "Low Vote Average", "Low Popularity", "Low Interesting");
+				applyAndRule(fuzzyVariables, "High Vote Average", "Low Vote Count", "Medium Popularity");
+				applyAndRule(fuzzyVariables, "Medium Vote Average", "Low Vote Count", "Low Popularity");
+				applyAndRule(fuzzyVariables, "Low Vote Average", "Low Vote Count", "Low Popularity");
 
+				// Revenue and Popularity = Popularity
+				applyAndRule(fuzzyVariables, "High Revenue", "High Popularity", "High Popularity");
+				applyAndRule(fuzzyVariables, "Medium Revenue", "High Popularity", "High Popularity");
+				applyAndRule(fuzzyVariables, "Low Revenue", "High Popularity", "Medium Popularity");
 
-				applyAndRule(fuzzyVariables, "High Genre Match", "Very Interesting", "Very Interesting");
-				applyAndRule(fuzzyVariables, "Medium Genre Match", "Very Interesting", "Average Interesting");
-				applyAndRule(fuzzyVariables, "Low Genre Match", "Very Interesting", "Average Interesting");
+				applyAndRule(fuzzyVariables, "High Revenue", "Medium Popularity", "High Popularity");
+				applyAndRule(fuzzyVariables, "Medium Revenue", "Medium Popularity", "Medium Popularity");
+				applyAndRule(fuzzyVariables, "Low Revenue", "Medium Popularity", "Medium Popularity");
 
-				applyAndRule(fuzzyVariables, "High Genre Match", "Average Interesting", "Very Interesting");
-				applyAndRule(fuzzyVariables, "Medium Genre Match", "Average Interesting", "Average Interesting");
-				applyAndRule(fuzzyVariables, "Low Genre Match", "Average Interesting", "Low Interesting");
+				applyAndRule(fuzzyVariables, "High Revenue", "Low Popularity", "Medium Popularity");
+				applyAndRule(fuzzyVariables, "Medium Revenue", "Low Popularity", "Medium Popularity");
+				applyAndRule(fuzzyVariables, "Low Revenue", "Low Popularity", "Low Popularity");
 
-				applyAndRule(fuzzyVariables, "High Genre Match", "Low Interesting", "Average Interesting");
-				applyAndRule(fuzzyVariables, "Medium Genre Match", "Low Interesting", "Low Interesting");
-				applyAndRule(fuzzyVariables, "Low Genre Match", "Low Interesting", "Low Interesting");
+				// Genre Match and Popularity = Insteresting
+				applyAndRule(fuzzyVariables, "High Genre Match", "High Popularity", "Very Interesting");
+				applyAndRule(fuzzyVariables, "Medium Genre Match", "High Popularity", "Very Interesting");
+				applyAndRule(fuzzyVariables, "Low Genre Match", "High Popularity", "Average Interesting");
+
+				applyAndRule(fuzzyVariables, "High Genre Match", "Medium Popularity", "Very Interesting");
+				applyAndRule(fuzzyVariables, "Medium Genre Match", "Medium Popularity", "Average Interesting");
+				applyAndRule(fuzzyVariables, "Low Genre Match", "Medium Popularity", "Low Interesting");
+
+				applyAndRule(fuzzyVariables, "High Genre Match", "Low Popularity", "Average Interesting");
+				applyAndRule(fuzzyVariables, "Medium Genre Match", "Low Popularity", "Low Interesting");
+				applyAndRule(fuzzyVariables, "Low Genre Match", "Low Popularity", "Low Interesting");
+
+				// Genre Match and Runtime = Interesting
+				applyAndRule(fuzzyVariables, "High Genre Match", "Long Runtime", "Very Interesting");
+				applyAndRule(fuzzyVariables, "Medium Genre Match", "Long Runtime", "Very Interesting");
+				applyAndRule(fuzzyVariables, "Low Genre Match", "Long Runtime", "Average Interesting");
+
+				applyAndRule(fuzzyVariables, "High Genre Match", "Medium Runtime", "Very Interesting");
+				applyAndRule(fuzzyVariables, "Medium Genre Match", "Medium Runtime", "Average Interesting");
+				applyAndRule(fuzzyVariables, "Low Genre Match", "Medium Runtime", "Low Interesting");
+
+				applyAndRule(fuzzyVariables, "High Genre Match", "Short Runtime", "Average Interesting");
+				applyAndRule(fuzzyVariables, "Medium Genre Match", "Short Runtime", "Low Interesting");
+				applyAndRule(fuzzyVariables, "Low Genre Match", "Short Runtime", "Low Interesting");
 
 				float lowInteresting = fuzzyVariables.getOrDefault("Low Interesting", 0.0f);
 				float averageInteresting = fuzzyVariables.getOrDefault("Average Interesting", 0.0f);
@@ -106,10 +174,14 @@ public class FuzzyMain {
 						/ (lowInteresting + averageInteresting + veryInteresting);
 
 				System.out
-						.println("Low Interesting: " + lowInteresting + " Average Interesting: " + averageInteresting
+						.println("Low Interesting: " + lowInteresting + " Average Interesting: " +
+								averageInteresting
 								+ " Very Interesting: " + veryInteresting);
-				System.out.println("VoteAverage: " + voteAverageValue + " PopularityValue: " + popularityValue
-						+ " genreValue: " + genreValue + " -> " + score);
+				System.out.println("VoteAverage: " + voteAverageValue + " Popularity: " +
+						popularityValue
+						+ " Genre: " + genreValue + " Revenue: " + revenueValue + " VoteCount: " +
+						voteCountValue
+						+ " Runtime: " + runtimeValue + " -> " + score);
 
 				if (!Float.isNaN(score)) {
 					movieScores.add(new MovieScore(movieTitle, score));
@@ -126,7 +198,8 @@ public class FuzzyMain {
 		System.out.println("\nTop 10 Movies with Best Score:");
 		for (int i = 0; i < Math.min(10, movieScores.size()); i++) {
 			System.out.println(
-					(i + 1) + ". " + movieScores.get(i).getTitle() + " - Score: " + Math.round(movieScores.get(i).getScore() * 100.0) / 100.0);
+					(i + 1) + ". " + movieScores.get(i).getTitle() + " - Score: "
+							+ movieScores.get(i).getScore());
 		}
 	}
 
@@ -145,7 +218,10 @@ public class FuzzyMain {
 			return 0.0f;
 
 		// List of target genres we want to consider
-		String[] targetGenres = { "Action", "Adventure", "Science Fiction" };
+		String[] targetGenres = { "Adventure", "Action", "Science Fiction" };
+
+		// List of genres that the user dislikes
+		String[] dislikedGenres = { "Horror", "Thriller", "Documentary", "Romance" };
 
 		// Count how many of the target genres appear in the movie's genre string
 		int matchCount = 0;
@@ -155,9 +231,16 @@ public class FuzzyMain {
 			}
 		}
 
-		// Normalize the score to the range [0,1] based on the number of matching genres
-		// Avoid division by zero and ensure a valid result
-		return (matchCount > 0) ? (matchCount / (float) targetGenres.length) : 0.0f;
+		// Penalize movies with disliked genres
+		for (String disliked : dislikedGenres) {
+			if (genres.contains(disliked)) {
+				matchCount--;
+			}
+		}
+
+		// Normalize the score to the range [-1,1] based on the number of matching
+		// genres
+		return matchCount / (float) targetGenres.length;
 	}
 
 	private static String[] parseCSVLine(String line) {
