@@ -8,17 +8,41 @@ This project uses fuzzy logic to score movies based on various attributes such a
 - `VariableGroup.java`: Defines the `VariableGroup` class, which manages a group of `FuzzyVariable` instances and provides methods to fuzzify values.
 - `FuzzyMain.java`: The main class that reads movie data from a CSV file, fuzzifies the attributes, applies fuzzy rules, and computes the final scores for the movies.
 
+## Movie types
+
+- Action
+- Adventure
+- Fantasy
+- Science Fiction
+- Crime
+- Drama
+- Thriller
+- Animation
+- Family
+- Western
+- Comedy
+- Romance
+- Horror
+- Mystery
+- History
+- War
+- Music
+- Documentary
+- Foreign
+- TV
+- Movie
+
 ## Results for Top 10 Movies with the Genres: Action, Adventure, and Science Fiction
 
 Top 10 Movies with Best Score:
 
-1. Guardians of the Galaxy - Score: 8.9
-2. Interstellar - Score: 8.5
-3. Inception - Score: 8.25
-4. The Empire Strikes Back - Score: 8.25
-5. Star Wars - Score: 8.25
-6. Star Wars: Clone Wars (Volume 1) - Score: 8.25
-7. Deadpool - Score: 8.0
-8. Return of the Jedi - Score: 7.89
-9. The Lord of the Rings: The Fellowship of the Ring - Score: 7.67
-10. The Lord of the Rings: The Return of the King - Score: 7.65
+1. Guardians of the Galaxy - Score: 9.381866
+2. Teenage Mutant Ninja Turtles - Score: 8.321616
+3. The Hunger Games: Mockingjay - Part 2 - Score: 8.294137
+4. Transformers: Age of Extinction - Score: 8.276879
+5. Men in Black - Score: 8.256474
+6. Interstellar - Score: 8.250001
+7. Deadpool - Score: 8.250001
+8. John Carter - Score: 8.25
+9. Superman Returns - Score: 8.25
+10. Man of Steel - Score: 8.25
