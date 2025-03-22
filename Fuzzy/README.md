@@ -36,13 +36,13 @@ This project uses fuzzy logic to score movies based on various attributes such a
 
 Top 10 Movies with Best Score:
 
-1. Guardians of the Galaxy - Score: 9.381866
-2. Teenage Mutant Ninja Turtles - Score: 8.321616
-3. The Hunger Games: Mockingjay - Part 2 - Score: 8.294137
-4. Transformers: Age of Extinction - Score: 8.276879
-5. Men in Black - Score: 8.256474
-6. Interstellar - Score: 8.250001
-7. Deadpool - Score: 8.250001
-8. John Carter - Score: 8.25
-9. Superman Returns - Score: 8.25
-10. Man of Steel - Score: 8.25
+1. Guardians of the Galaxy - Score: 9.262525
+2. Interstellar - Score: 8.5
+3. Deadpool - Score: 8.5
+4. After Earth - Score: 8.25
+5. Teenage Mutant Ninja Turtles - Score: 8.25
+6. Fantastic Four - Score: 8.25
+7. Men in Black - Score: 8.25
+8. X-Men - Score: 8.25
+9. Return of the Jedi - Score: 8.184211
+10. Ant-Man - Score: 8.16137
