@@ -244,7 +244,7 @@ public class GamePanel extends Canvas implements Runnable {
 			strategy.show();
 
 			try {
-				Thread.sleep(100);
+				Thread.sleep(100); // Movement delay for character
 			} catch (InterruptedException ignored) {
 			}
 
