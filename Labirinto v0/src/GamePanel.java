@@ -152,10 +152,22 @@ public class GamePanel extends Canvas implements Runnable {
 		NodoAStar start = new NodoAStar(iniX, iniY, 0, heuristica(iniX, iniY, objX, objY), null);
 		openList.add(start);
 
+		// Decide movement directions based on heuristic
+		int[][] directions;
+		if (tipoHeuristica == 1) { // Euclidean → allow diagonal
+			directions = new int[][] {
+					{ 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 },
+					{ 1, 1 }, { 1, -1 }, { -1, 1 }, { -1, -1 }
+			};
+		} else { // Manhattan → only straight moves
+			directions = new int[][] {
+					{ 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
+			};
+		}
+
 		while (!openList.isEmpty()) {
 			NodoAStar current = openList.poll();
 
-			// Printando o nó que está sendo acessado
 			System.out.println("Acessando nó: (" + current.x + ", " + current.y +
 					") | Custo de Movimento: " + current.momevent_cost +
 					", Custo da Heuristica: " + heuristica(current.x, current.y, objX, objY) +
@@ -184,14 +196,30 @@ public class GamePanel extends Canvas implements Runnable {
 				nodosPercorridos.add(current.x + current.y * 1000);
 			}
 
-			for (int[] dir : new int[][] { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } }) {
+			for (int[] dir : directions) {
 				int nx = current.x + dir[0];
 				int ny = current.y + dir[1];
 
-				if (nx < 0 || ny < 0 || nx >= mapa.Largura || ny >= mapa.Altura || mapa.mapa[ny][nx] != 0)
+				if (nx < 0 || ny < 0 || nx >= mapa.Largura || ny >= mapa.Altura)
+					continue;
+				if (mapa.mapa[ny][nx] != 0)
 					continue;
 
-				NodoAStar neighbor = new NodoAStar(nx, ny, current.momevent_cost + 1, heuristica(nx, ny, objX, objY),
+				// Prevent diagonal cutting through corners
+				if (dir[0] != 0 && dir[1] != 0) {
+					if (mapa.mapa[current.y][current.x + dir[0]] != 0 ||
+							mapa.mapa[current.y + dir[1]][current.x] != 0)
+						continue;
+				}
+
+				// Cost: 10 (straight) or 14 (diagonal)
+				int moveCost = (dir[0] == 0 || dir[1] == 0) ? 10 : 14;
+
+				NodoAStar neighbor = new NodoAStar(
+						nx,
+						ny,
+						current.momevent_cost + moveCost,
+						heuristica(nx, ny, objX, objY),
 						current);
 
 				if (closedSet.contains(neighbor))
@@ -203,6 +231,7 @@ public class GamePanel extends Canvas implements Runnable {
 					openList.add(neighbor);
 			}
 		}
+
 		return false;
 	}
 
@@ -210,9 +239,9 @@ public class GamePanel extends Canvas implements Runnable {
 		if (tipoHeuristica == 1) {
 			double dx = x1 - x2;
 			double dy = y1 - y2;
-			return (int) Math.sqrt(dx * dx + dy * dy); // Euclidiana
+			return (int) (Math.sqrt(dx * dx + dy * dy) * 10); // Euclidiana
 		} else {
-			return Math.abs(x1 - x2) + Math.abs(y1 - y2); // Manhattan
+			return (Math.abs(x1 - x2) + Math.abs(y1 - y2)) * 10; // Manhattan
 		}
 	}
 
@@ -275,8 +304,8 @@ public class GamePanel extends Canvas implements Runnable {
 		if (caminho != null && caminhoIndex < caminho.length) {
 			int nx = caminho[caminhoIndex];
 			int ny = caminho[caminhoIndex + 1];
-			meuHeroi.X = nx * 16;
-			meuHeroi.Y = ny * 16;
+			meuHeroi.X = nx * 16 + 8;
+			meuHeroi.Y = ny * 16 + 8;
 			caminhoIndex += 2;
 		}
 
