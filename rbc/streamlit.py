@@ -51,8 +51,8 @@ with st.expander("📘 Documentação da Modelagem do RBC"):
 
 # --- Entrada de dados ---
 st.sidebar.header("🔍 Parâmetros do Novo Caso")
-white_rating = st.sidebar.slider("White Rating", 1000, 2800, 1850)
-black_rating = st.sidebar.slider("Black Rating", 1000, 2800, 1900)
+white_rating = st.sidebar.slider("White Rating", 784, 2800, 1850)
+black_rating = st.sidebar.slider("Black Rating", 789, 2800, 1900)
 opening = st.sidebar.selectbox("Opening", sorted(df["opening_name"].unique()))
 increment = st.sidebar.selectbox("Increment Code", sorted(df["increment_code"].unique()))
 
