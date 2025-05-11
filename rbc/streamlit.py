@@ -26,7 +26,7 @@ def calculate_similarity(row, new_case, weights):
     return sim / total_weight
 
 # --- Carregar dados ---
-df = pd.read_csv("games.csv")
+df = df = pd.read_csv("https://raw.githubusercontent.com/FrostPrice/artificial-inteligence/refs/heads/main/rbc/games.csv")
 df = df[["white_rating", "black_rating", "opening_name", "increment_code", "victory_status", "winner"]].dropna()
 df = df.copy()
 
