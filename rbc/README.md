@@ -108,7 +108,7 @@ python main.py
 ### 5. Run the Project (GUI)
 
 ```bash
-streamlit run streamlit_app.py
+streamlit run streamlit.py
 ```
 
 ---
