@@ -83,6 +83,8 @@ def algoritmo_genetico(caminho_csv):
     dias, cotacoes = ler_dados_csv(caminho_csv)
     NUM_DIAS_VALIDOS = len(dias)
     NUM_CICLOS = NUM_DIAS_VALIDOS // 2
+    melhor_dna_global = None
+    melhor_valor_global = -float('inf')
 
     codigos_validos = list({codigo for dia in dias for codigo in cotacoes[dia].keys()})
     if len(codigos_validos) == 0:
@@ -96,6 +98,9 @@ def algoritmo_genetico(caminho_csv):
         for individuo in populacao:
             valor_final, _ = avaliar_dna(individuo, dias, cotacoes, NUM_CICLOS)
             fitness.append(valor_final)
+            if valor_final > melhor_valor_global:
+                melhor_valor_global = valor_final
+                melhor_dna_global = individuo[:]
 
         nova_populacao = []
         while len(nova_populacao) < POP_SIZE:
@@ -111,18 +116,18 @@ def algoritmo_genetico(caminho_csv):
         historico_melhor.append(melhor_fitness)
         print(f"Geração {geracao + 1}: Melhor valor final = R$ {melhor_fitness:.2f}")
 
-    melhor_individuo = max(zip(populacao, fitness), key=lambda x: x[1])
-    return melhor_individuo[0], melhor_individuo[1], NUM_CICLOS, dias, cotacoes, historico_melhor
+    return melhor_dna_global, melhor_valor_global, NUM_CICLOS, dias, cotacoes, historico_melhor
 
+# Execução do Algoritmo Genético
 melhor_dna, melhor_valor, NUM_CICLOS, dias, cotacoes, historico_melhor = algoritmo_genetico("./cotacoes_b3_202_05.csv")
 
 print("\nMelhor alocação encontrada:")
 _, historico_por_ciclo = avaliar_dna(melhor_dna, dias, cotacoes, NUM_CICLOS, verbose=True)
 for ciclo in range(NUM_CICLOS):
     print(f"Ciclo {ciclo + 1}: {melhor_dna[ciclo * NUM_POTES:(ciclo + 1) * NUM_POTES]}")
-print(f"Valor final: R$ {melhor_valor:.2f}")
+print(f"Melhor valor final: R$ {melhor_valor:.2f}")
 
-# Plot da evolução do melhor valor por geração
+# Gráfico da evolução por geração
 plt.plot(range(1, len(historico_melhor) + 1), historico_melhor)
 plt.xlabel("Geração")
 plt.ylabel("Melhor valor (R$)")
@@ -132,7 +137,8 @@ plt.tight_layout()
 plt.savefig("grafico_evolucao.png")
 print("Gráfico salvo como 'grafico_evolucao.png'")
 
-print("\nVariação por ciclo:")
+# Gráfico da evolução por ciclo
+print("\nVariação por ciclo (Porcentagem):")
 for i in range(1, len(historico_por_ciclo)):
     anterior = historico_por_ciclo[i - 1]
     atual = historico_por_ciclo[i]
