@@ -1,1 +1,6 @@
 /Dennis_IA_Itajai-main/
+
+**/__pycache__/
+**/*.png
+**/*.pth
+**/.venv
