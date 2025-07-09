@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-
+from config import TRAINING_CONFIG
 
 def train_model(model, train_loader, val_loader, epochs=100, learning_rate=0.001, device=None):
     """
@@ -20,7 +20,6 @@ def train_model(model, train_loader, val_loader, epochs=100, learning_rate=0.001
     val_accuracies = []
     
     best_val_loss = float('inf')
-    patience = 15
     patience_counter = 0
     
     print("Iniciando treinamento...")
@@ -80,7 +79,7 @@ def train_model(model, train_loader, val_loader, epochs=100, learning_rate=0.001
         if epoch % 10 == 0:
             print(f'Epoch {epoch:3d}: Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}, Val Acc: {val_accuracy:.4f}')
         
-        if patience_counter >= patience:
+        if patience_counter >= TRAINING_CONFIG['patience']:
             print(f"Early stopping na época {epoch}")
             break
     
