@@ -33,11 +33,7 @@ def evaluate_model(model, X_test, y_test, dataset_name="Test", device=None):
     print(f"Precisão:  {precision:.4f}")
     print(f"Revocação: {recall:.4f}")
     print(f"F1-Score:  {f1:.4f}")
-    
-    # Relatório detalhado
-    print(f"\nRelatório de Classificação - {dataset_name}:")
-    print(classification_report(y_test, predictions, target_names=['Não', 'Sim']))
-    
+        
     # Matriz de confusão
     cm = confusion_matrix(y_test, predictions)
     plt.figure(figsize=(8, 6))
